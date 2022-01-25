@@ -1,0 +1,24 @@
+{
+  "name": "react-pomodoro-server",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "express": "^4.17.2",
+    "husky": "^7.0.4",
+    "mongoose": "^6.1.7"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^16.1.0",
+    "@commitlint/config-conventional": "^16.0.0",
+    "eslint": "^8.7.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "prettier-eslint": "^13.0.0"
+  }
+}
