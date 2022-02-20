@@ -1,16 +1,21 @@
 const mongoose = require("mongoose");
 const isPositiveInteger = require("../utils/isPositiveInteger");
 
+const current = new Date();
+const timestamp = new Date(
+  Date.UTC(current.getFullYear(), current.getMonth(), current.getDate())
+);
+
 const recordSchema = new mongoose.Schema(
   {
     date: {
       type: Date,
-      default: new Date(),
+      default: timestamp,
     },
     task: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Task"
+      ref: "Task",
     },
     count: {
       type: Number,
@@ -24,7 +29,7 @@ const recordSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 const Record = mongoose.model("Record", recordSchema);

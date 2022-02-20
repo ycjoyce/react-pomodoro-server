@@ -2,7 +2,14 @@ const { send } = require("express/lib/response");
 const request = require("supertest");
 const app = require("../src/app");
 const Record = require("../src/models/record");
-const { setupDatabase, userOne, userTwo, taskOne, taskThree, recordOne } = require("./fixtures/db");
+const {
+  setupDatabase,
+  userOne,
+  userTwo,
+  taskOne,
+  taskThree,
+  recordOne,
+} = require("./fixtures/db");
 
 beforeEach(setupDatabase);
 
@@ -33,10 +40,7 @@ describe("新增紀錄", () => {
       .send(exampleRecord)
       .expect(404);
 
-    await request(app)
-      .post("/records")
-      .send(exampleRecord)
-      .expect(401);
+    await request(app).post("/records").send(exampleRecord).expect(401);
   });
 });
 
@@ -64,13 +68,22 @@ describe("讀取不分 task 的紀錄", () => {
       .send()
       .expect(200);
     expect(response.body.length).toBe(1);
-  });
-  
-  test("沒授權應該不能讀取紀錄", async () => {
-    await request(app)
-      .get("/records")
+    const responseTwo = await request(app)
+      .get("/records?date=2022-02-01")
+      .set("Authorization", `Bearer ${userOne.tokens[0].token}`)
       .send()
-      .expect(401);
+      .expect(200);
+    expect(responseTwo.body.length).toBe(2);
+    const responseThree = await request(app)
+      .get("/records?date=2022-02-01")
+      .set("Authorization", `Bearer ${userTwo.tokens[0].token}`)
+      .send()
+      .expect(200);
+    expect(responseThree.body.length).toBe(0);
+  });
+
+  test("沒授權應該不能讀取紀錄", async () => {
+    await request(app).get("/records").send().expect(401);
   });
 });
 
@@ -98,11 +111,8 @@ describe("讀取特定 task 的紀錄", () => {
       .set("Authorization", `Bearer ${userTwo.tokens[0].token}`)
       .send()
       .expect(404);
-    
-    await request(app)
-      .get(`/records/task/${taskOne._id}`)
-      .send()
-      .expect(401);
+
+    await request(app).get(`/records/task/${taskOne._id}`).send().expect(401);
   });
 });
 
@@ -129,10 +139,7 @@ describe("讀取特定紀錄", () => {
       .set("Authorization", `Bearer ${userTwo.tokens[0].token}`)
       .send()
       .expect(404);
-    await request(app)
-      .get(`/records/${recordOne._id}`)
-      .send()
-      .expect(401);
+    await request(app).get(`/records/${recordOne._id}`).send().expect(401);
   });
 });
 
@@ -161,10 +168,10 @@ describe("更新紀錄", () => {
       .set("Authorization", `Bearer ${userTwo.tokens[0].token}`)
       .send({ count: 99 })
       .expect(404);
-    
+
     await request(app)
       .patch(`/records/${recordOne._id}`)
-      .send({ count: 99 })  
+      .send({ count: 99 })
       .expect(401);
   });
 });
@@ -184,10 +191,7 @@ describe("刪除紀錄", () => {
       .set("Authorization", `Bearer ${userTwo.tokens[0].token}`)
       .send()
       .expect(404);
-    
-    await request(app)
-      .delete(`/records/${recordOne._id}`)
-      .send()
-      .expect(401);
+
+    await request(app).delete(`/records/${recordOne._id}`).send().expect(401);
   });
 });

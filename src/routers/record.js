@@ -29,15 +29,23 @@ recordRouter.post("/records", auth, async (req, res) => {
 recordRouter.get("/records", auth, async (req, res) => {
   try {
     const tasks = await Task.find({ owner: req.user._id });
-    const taskRecords = await Promise.all(tasks.map((task) => Record.find({ task: task._id })));
+    const taskRecords = await Promise.all(
+      tasks.map((task) => Record.find({ task: task._id }))
+    );
 
     if (req.query.date) {
-      const dateArr = req.query.date.split("-").map((e, i) => i !== 1 ? parseInt(e) : parseInt(e) - 1);
+      const dateArr = req.query.date
+        .split("-")
+        .map((e, i) => (i !== 1 ? parseInt(e) : parseInt(e) - 1));
       let result = [];
-      await Promise.all(tasks.map((task) => task.populate({
-        path: "records",
-        match: { date: new Date(...dateArr) },
-      })));
+      await Promise.all(
+        tasks.map((task) =>
+          task.populate({
+            path: "records",
+            match: { date: new Date(Date.UTC(...dateArr)) },
+          })
+        )
+      );
       tasks.forEach((task) => {
         result = result.concat(task.records);
       });
@@ -45,7 +53,6 @@ recordRouter.get("/records", auth, async (req, res) => {
     }
 
     res.send(taskRecords.flat());
-
   } catch (e) {
     res.status(500).send(e);
   }
@@ -56,7 +63,7 @@ recordRouter.get("/records/task/:task", auth, async (req, res) => {
   try {
     const task = await Task.findOne({
       _id: req.params.task,
-      owner: req.user._id
+      owner: req.user._id,
     });
     if (!task) {
       return res.status(404).send();
@@ -77,7 +84,7 @@ recordRouter.get("/records/:id", auth, async (req, res) => {
     }
     const task = await Task.findOne({
       _id: record.task,
-      owner: req.user._id
+      owner: req.user._id,
     });
     if (!task) {
       return res.status(404).send();
@@ -92,7 +99,9 @@ recordRouter.get("/records/:id", auth, async (req, res) => {
 recordRouter.patch("/records/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["count"];
-  const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
+  const isValidOperation = updates.every((update) =>
+    allowedUpdates.includes(update)
+  );
 
   if (!isValidOperation) {
     return res.status(400).send({ errors: "Invalid update" });
@@ -107,7 +116,7 @@ recordRouter.patch("/records/:id", auth, async (req, res) => {
     if (!task) {
       return res.status(404).send();
     }
-    updates.forEach((update) => record[update] = req.body[update]);
+    updates.forEach((update) => (record[update] = req.body[update]));
     await record.save();
     res.send(record);
   } catch (e) {

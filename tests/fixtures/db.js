@@ -53,21 +53,21 @@ const taskThree = {
 const recordOne = {
   _id: new mongoose.Types.ObjectId(),
   task: taskOne._id,
-  date: new Date(2022, 0, 1),
+  date: new Date(Date.UTC(2022, 0, 1)),
   count: 2,
 };
 
 const recordTwo = {
   _id: new mongoose.Types.ObjectId(),
   task: taskOne._id,
-  date: new Date(2022, 1, 1),
+  date: new Date(Date.UTC(2022, 1, 1)),
   count: 5,
 };
 
 const recordThree = {
   _id: new mongoose.Types.ObjectId(),
   task: taskTwo._id,
-  date: new Date(2022, 1, 1),
+  date: new Date(Date.UTC(2022, 1, 1)),
   count: 4,
 };
 
