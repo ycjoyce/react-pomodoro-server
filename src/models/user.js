@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    admin: {
+      type: Boolean,
+      default: false,
+    },
     tokens: [
       {
         token: {
@@ -18,6 +22,14 @@ const userSchema = new mongoose.Schema(
         }
       }
     ],
+    ringtones: {
+      work: {
+        type: mongoose.Schema.Types.ObjectId,
+      },
+      break: {
+        type: mongoose.Schema.Types.ObjectId,
+      }
+    }
   },
   {
     timestamps: true,
@@ -49,6 +61,8 @@ userSchema.methods.toJSON = function () {
   const userObject = user.toObject();
 
   delete userObject.tokens;
+  delete userObject.ringtones;
+  delete userObject.admin;
 
   return userObject;
 }

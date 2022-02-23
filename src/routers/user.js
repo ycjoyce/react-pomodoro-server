@@ -1,6 +1,6 @@
 const express = require("express");
 const User = require("../models/user");
-const auth = require("../middlewares/auth");
+const { auth } = require("../middlewares/auth");
 
 const userRouter = new express.Router();
 
@@ -39,6 +39,6 @@ userRouter.post("/users/logout", auth, async (req, res) => {
   } catch {
     res.status(500).send();
   }
-})
+});
 
 module.exports = userRouter;

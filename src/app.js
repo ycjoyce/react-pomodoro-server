@@ -4,6 +4,7 @@ require("./db/mongoose");
 const taskRouter = require("./routers/task");
 const recordRouter = require("./routers/record");
 const userRouter = require("./routers/user");
+const ringtoneRouter = require("./routers/ringtone");
 
 const app = express();
 
@@ -26,5 +27,6 @@ app.use(cors(corsOptions));
 app.use(taskRouter);
 app.use(recordRouter);
 app.use(userRouter);
+app.use(ringtoneRouter);
 
 module.exports = app;

@@ -1,6 +1,6 @@
 const express = require("express");
 const Record = require("../models/record");
-const auth = require("../middlewares/auth");
+const { auth } = require("../middlewares/auth");
 const Task = require("../models/task");
 const { userTwoId, taskOne } = require("../../tests/fixtures/db");
 
